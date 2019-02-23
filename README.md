@@ -1,12 +1,12 @@
-# xor-routing-table
+# kademlia-routing-table
 
-XOR based routing table used for P2P networks such as a Kademlia DHT.
+XOR distance based routing table used for P2P networks such as a Kademlia DHT.
 
 ```
-npm install xor-routing-table
+npm install kademlia-routing-table
 ```
 
-[![build status](https://travis-ci.org/mafintosh/xor-routing-table.svg?branch=master)](https://travis-ci.org/mafintosh/xor-routing-table)
+[![build status](https://travis-ci.org/mafintosh/kademlia-routing-table.svg?branch=master)](https://travis-ci.org/mafintosh/kademlia-routing-table)
 
 Similar to k-buckets, but implemented using the simplifications described in https://github.com/ethereum/wiki/wiki/Kademlia-Peer-Selection
 
@@ -16,7 +16,7 @@ I recommend reading the [Kademlia DHT paper](https://pdos.csail.mit.edu/~petar/p
 ## Usage
 
 ``` js
-const RoutingTable = require('xor-routing-table')
+const RoutingTable = require('kademlia-routing-table')
 const { randomBytes } = require('crypto')
 
 // Create a new table that stores nodes "close" to the passed in id.
