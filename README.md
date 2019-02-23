@@ -6,6 +6,8 @@ XOR based routing table used for P2P networks such as a Kademlia DHT.
 npm install xor-routing-table
 ```
 
+[![build status](https://travis-ci.org/mafintosh/xor-routing-table.svg?branch=master)](https://travis-ci.org/mafintosh/xor-routing-table)
+
 Similar to k-buckets, but implemented using the simplifications described in https://github.com/ethereum/wiki/wiki/Kademlia-Peer-Selection
 
 To understand the concept behind peer routing, DHTs, and the terms used here,
