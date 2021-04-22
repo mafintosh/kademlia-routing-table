@@ -42,6 +42,17 @@ module.exports = class RoutingTable extends EventEmitter {
     return this.get(id) !== null
   }
 
+  random () {
+    const offset = (Math.random() * this.rows.length) | 0
+
+    for (let i = 0; i < this.rows.length; i++) {
+      const r = this.rows[(i + offset) % this.rows.length]
+      if (r && r.nodes.length) return r.random()
+    }
+
+    return null
+  }
+
   closest (id, k) {
     if (!k) k = this.k
 
@@ -154,6 +165,10 @@ class Row extends EventEmitter {
     }
 
     return null
+  }
+
+  random () {
+    return this.nodes.length ? this.nodes[(Math.random() * this.nodes.length) | 0] : null
   }
 
   insert (i, node) {

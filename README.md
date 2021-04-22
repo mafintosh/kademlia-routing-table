@@ -91,6 +91,10 @@ in a DHT should store a value based on its id.
 Remove a node using its id. Returns `true` if a node existed for the id and
 was removed and `false` otherwise.
 
+#### `node = table.random()`
+
+Get a random node from the table.
+
 #### `nodes = table.toArray()`
 
 Returns all nodes from table as an array. If you create a new routing table
