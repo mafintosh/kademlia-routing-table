@@ -7,7 +7,7 @@ tape('basic', function (assert) {
   const node = { id: id() }
 
   assert.ok(table.add(node))
-  assert.same(table.closest(id()), [ node ])
+  assert.same(table.closest(id()), [node])
   assert.end()
 })
 
