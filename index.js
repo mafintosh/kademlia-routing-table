@@ -8,7 +8,7 @@ module.exports = class RoutingTable extends EventEmitter {
 
     this.id = id
     this.k = opts.k || 20
-    this.rows = new Array(id.length * 8 - 1)
+    this.rows = new Array(id.length * 8)
   }
 
   add (node) {
