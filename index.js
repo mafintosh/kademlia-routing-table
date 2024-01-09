@@ -114,7 +114,7 @@ class Row extends EventEmitter {
 
       if (c === 0) {
         this.nodes[m] = node
-        return
+        return true
       }
 
       if (c < 0) r = m - 1

@@ -1,14 +1,13 @@
-const tape = require('tape')
+const test = require('brittle')
 const { randomBytes } = require('crypto')
 const RoutingTable = require('./')
 
-tape('basic', function (assert) {
+test('basic', function (assert) {
   const table = new RoutingTable(id())
   const node = { id: id() }
 
   assert.ok(table.add(node))
-  assert.same(table.closest(id()), [node])
-  assert.end()
+  assert.alike(table.closest(id()), [node])
 })
 
 function id () {
