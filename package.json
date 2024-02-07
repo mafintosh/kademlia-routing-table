@@ -3,10 +3,18 @@
   "version": "1.0.2",
   "description": "XOR based routing table used for P2P networks such as a Kademlia DHT.",
   "main": "index.js",
-  "dependencies": {},
+  "imports": {
+    "events": {
+      "bare": "bare-events",
+      "default": "events"
+    }
+  },
+  "dependencies": {
+    "bare-events": "^2.2.0"
+  },
   "devDependencies": {
-    "standard": "^17.1.0",
-    "brittle": "^3.3.2"
+    "brittle": "^3.3.2",
+    "standard": "^17.1.0"
   },
   "scripts": {
     "test": "standard && brittle test.js"
