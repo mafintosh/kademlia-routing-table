@@ -27,6 +27,21 @@ test('random', function (t) {
   }
 })
 
+test('insert very shared', function (t) {
+  const table = new RoutingTable(Buffer.alloc(32))
+
+  const a = Buffer.alloc(32)
+  const b = Buffer.alloc(32)
+
+  a[31] = 0b10
+  b[31] = 0b11
+
+  table.add({ id: a })
+  table.add({ id: b })
+
+  t.is(table.size, 2)
+})
+
 function id () {
   return randomBytes(32)
 }

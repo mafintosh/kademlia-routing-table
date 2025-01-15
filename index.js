@@ -106,6 +106,7 @@ class Row extends EventEmitter {
     super()
 
     this.data = null // can be used be upstream for whatevs
+    this.byteOffset = index >> 3
     this.index = index
     this.table = table
     this.nodes = []
@@ -188,8 +189,9 @@ class Row extends EventEmitter {
     this.emit('remove', this.nodes.pop())
   }
 
+  // very likely they diverge after a couple of bytes so a simple impl, like this is prop fastest vs Buffer.compare
   compare (a, b) {
-    for (let i = this.index; i < a.length; i++) {
+    for (let i = this.byteOffset; i < a.length; i++) {
       const ai = a[i]
       const bi = b[i]
       if (ai === bi) continue
