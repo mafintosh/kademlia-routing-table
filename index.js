@@ -22,12 +22,11 @@ module.exports = class RoutingTable extends EventEmitter {
       this.emit('row', row)
     }
 
-    if (row.add(node, this.k)) {
-      this.size++
-      return true
-    }
+    const len = row.nodes.length
+    if (!row.add(node, this.k)) return false
 
-    return false
+    this.size += row.nodes.length - len
+    return true
   }
 
   remove (id) {
