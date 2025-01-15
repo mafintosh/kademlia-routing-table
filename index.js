@@ -8,6 +8,7 @@ module.exports = class RoutingTable extends EventEmitter {
 
     this.id = id
     this.k = opts.k || 20
+    this.size = 0
     this.rows = new Array(id.length * 8)
   }
 
@@ -21,14 +22,21 @@ module.exports = class RoutingTable extends EventEmitter {
       this.emit('row', row)
     }
 
-    return row.add(node, this.k)
+    if (row.add(node, this.k)) {
+      this.size++
+      return true
+    }
+
+    return false
   }
 
   remove (id) {
     const i = this._diff(id)
     const row = this.rows[i]
     if (!row) return false
-    return row.remove(id)
+    if (!row.remove(id)) return false
+    this.size--
+    return true
   }
 
   get (id) {
@@ -43,11 +51,13 @@ module.exports = class RoutingTable extends EventEmitter {
   }
 
   random () {
-    const offset = (Math.random() * this.rows.length) | 0
+    let n = (Math.random() * this.size) | 0
 
     for (let i = 0; i < this.rows.length; i++) {
-      const r = this.rows[(i + offset) % this.rows.length]
-      if (r && r.nodes.length) return r.random()
+      const r = this.rows[i]
+      if (!r) continue
+      if (n < r.nodes.length) return r.nodes[n]
+      n -= r.nodes.length
     }
 
     return null
@@ -165,10 +175,6 @@ class Row extends EventEmitter {
     }
 
     return null
-  }
-
-  random () {
-    return this.nodes.length ? this.nodes[(Math.random() * this.nodes.length) | 0] : null
   }
 
   insert (i, node) {
