@@ -3,6 +3,9 @@
   "version": "1.0.5",
   "description": "XOR based routing table used for P2P networks such as a Kademlia DHT.",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "imports": {
     "events": {
       "bare": "bare-events",
