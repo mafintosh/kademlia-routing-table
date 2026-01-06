@@ -13,7 +13,7 @@ I recommend reading the [Kademlia DHT paper](https://pdos.csail.mit.edu/~petar/p
 
 ## Usage
 
-``` js
+```js
 const RoutingTable = require('kademlia-routing-table')
 const { randomBytes } = require('crypto')
 
@@ -23,7 +23,7 @@ const table = new RoutingTable(randomBytes(32))
 
 // Add a node to the routing table
 table.add({
-  id: randomBytes(32), // this field is required
+  id: randomBytes(32) // this field is required
   // populate with any other data you want to store
 })
 
@@ -51,7 +51,7 @@ Create a new routing table.
 
 `id` should be a Buffer that is uniformily distributed. `options` include:
 
-``` js
+```js
 {
   k: 20 // The max row size
 }

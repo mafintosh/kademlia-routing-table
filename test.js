@@ -42,6 +42,6 @@ test('insert very shared', function (t) {
   t.is(table.size, 2)
 })
 
-function id () {
+function id() {
   return randomBytes(32)
 }

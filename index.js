@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events')
 
 module.exports = class RoutingTable extends EventEmitter {
-  constructor (id, opts) {
+  constructor(id, opts) {
     if (!opts) opts = {}
 
     super()
@@ -12,7 +12,7 @@ module.exports = class RoutingTable extends EventEmitter {
     this.rows = new Array(id.length * 8)
   }
 
-  add (node) {
+  add(node) {
     const i = this._diff(node.id)
 
     let row = this.rows[i]
@@ -29,7 +29,7 @@ module.exports = class RoutingTable extends EventEmitter {
     return true
   }
 
-  remove (id) {
+  remove(id) {
     const i = this._diff(id)
     const row = this.rows[i]
     if (!row) return false
@@ -38,18 +38,18 @@ module.exports = class RoutingTable extends EventEmitter {
     return true
   }
 
-  get (id) {
+  get(id) {
     const i = this._diff(id)
     const row = this.rows[i]
     if (!row) return null
     return row.get(id)
   }
 
-  has (id) {
+  has(id) {
     return this.get(id) !== null
   }
 
-  random () {
+  random() {
     let n = (Math.random() * this.size) | 0
 
     for (let i = 0; i < this.rows.length; i++) {
@@ -62,7 +62,7 @@ module.exports = class RoutingTable extends EventEmitter {
     return null
   }
 
-  closest (id, k) {
+  closest(id, k) {
     if (!k) k = this.k
 
     const result = []
@@ -72,12 +72,14 @@ module.exports = class RoutingTable extends EventEmitter {
     for (let i = d; i >= 0 && result.length < k; i--) this._pushNodes(i, k, result)
 
     // if we don't have enough close nodes, populate from other rows, re the paper
-    for (let i = d + 1; i < this.rows.length && result.length < k; i++) this._pushNodes(i, k, result)
+    for (let i = d + 1; i < this.rows.length && result.length < k; i++) {
+      this._pushNodes(i, k, result)
+    }
 
     return result
   }
 
-  _pushNodes (i, k, result) {
+  _pushNodes(i, k, result) {
     const row = this.rows[i]
     if (!row) return
 
@@ -85,11 +87,11 @@ module.exports = class RoutingTable extends EventEmitter {
     for (let j = 0; j < missing; j++) result.push(row.nodes[j])
   }
 
-  toArray () {
+  toArray() {
     return this.closest(this.id, Infinity)
   }
 
-  _diff (id) {
+  _diff(id) {
     for (let i = 0; i < id.length; i++) {
       const a = id[i]
       const b = this.id[i]
@@ -102,7 +104,7 @@ module.exports = class RoutingTable extends EventEmitter {
 }
 
 class Row extends EventEmitter {
-  constructor (table, index) {
+  constructor(table, index) {
     super()
 
     this.data = null // can be used be upstream for whatevs
@@ -112,7 +114,7 @@ class Row extends EventEmitter {
     this.nodes = []
   }
 
-  add (node) {
+  add(node) {
     const id = node.id
 
     let l = 0
@@ -140,7 +142,7 @@ class Row extends EventEmitter {
     return true
   }
 
-  remove (id) {
+  remove(id) {
     let l = 0
     let r = this.nodes.length - 1
 
@@ -160,7 +162,7 @@ class Row extends EventEmitter {
     return false
   }
 
-  get (id) {
+  get(id) {
     let l = 0
     let r = this.nodes.length - 1
 
@@ -177,20 +179,20 @@ class Row extends EventEmitter {
     return null
   }
 
-  insert (i, node) {
+  insert(i, node) {
     this.nodes.push(node) // push node or null or whatevs, just trying to not be polymorphic
     for (let j = this.nodes.length - 1; j > i; j--) this.nodes[j] = this.nodes[j - 1]
     this.nodes[i] = node
     this.emit('add', node)
   }
 
-  splice (i) {
+  splice(i) {
     for (; i < this.nodes.length - 1; i++) this.nodes[i] = this.nodes[i + 1]
     this.emit('remove', this.nodes.pop())
   }
 
   // very likely they diverge after a couple of bytes so a simple impl, like this is prop fastest vs Buffer.compare
-  compare (a, b) {
+  compare(a, b) {
     for (let i = this.byteOffset; i < a.length; i++) {
       const ai = a[i]
       const bi = b[i]

@@ -7,6 +7,10 @@
     "index.js"
   ],
   "imports": {
+    "crypto": {
+      "bare": "bare-crypto",
+      "default": "crypto"
+    },
     "events": {
       "bare": "bare-events",
       "default": "events"
@@ -16,11 +20,18 @@
     "bare-events": "^2.2.0"
   },
   "devDependencies": {
+    "bare-crypto": "^1.0.0",
     "brittle": "^3.3.2",
-    "standard": "^17.1.0"
+    "lunte": "^1.0.0",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0"
   },
   "scripts": {
-    "test": "standard && brittle test.js"
+    "format": "prettier --write .",
+    "lint": "prettier --check . && lunte",
+    "test": "npm run test:node && npm run test:bare",
+    "test:node": "brittle-node test.js",
+    "test:bare": "brittle-bare test.js"
   },
   "keywords": [
     "kademlia",
