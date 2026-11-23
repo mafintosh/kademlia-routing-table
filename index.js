@@ -185,8 +185,10 @@ class Row extends EventEmitter {
   }
 
   splice (i) {
+    const node = this.nodes[i]
     for (; i < this.nodes.length - 1; i++) this.nodes[i] = this.nodes[i + 1]
-    this.emit('remove', this.nodes.pop())
+    this.nodes.pop()
+    this.emit('remove', node)
   }
 
   // very likely they diverge after a couple of bytes so a simple impl, like this is prop fastest vs Buffer.compare
