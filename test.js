@@ -42,6 +42,36 @@ test('insert very shared', function (t) {
   t.is(table.size, 2)
 })
 
+test('remove event emits the removed node', function (t) {
+  const table = new RoutingTable(Buffer.alloc(32))
+
+  // the first bit differs from table.id, so all three land in row 0
+  const [a, b, c] = [1, 2, 3].map(function (n) {
+    const id = Buffer.alloc(32)
+    id[0] = 0x80
+    id[31] = n
+    return { id }
+  })
+
+  table.add(a)
+  table.add(b)
+  table.add(c)
+
+  const removed = []
+  table.rows[0].on('remove', (node) => removed.push(node))
+
+  table.remove(b.id) // middle of the row
+  t.is(removed.pop(), b)
+  t.alike(table.rows[0].nodes, [a, c])
+
+  table.remove(a.id) // start of the row
+  t.is(removed.pop(), a)
+
+  table.remove(c.id) // only node left
+  t.is(removed.pop(), c)
+  t.is(table.rows[0].nodes.length, 0)
+})
+
 function id () {
   return randomBytes(32)
 }
