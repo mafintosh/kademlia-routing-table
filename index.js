@@ -68,21 +68,37 @@ module.exports = class RoutingTable extends EventEmitter {
     const result = []
     const d = this._diff(id)
 
-    // push close nodes
-    for (let i = d; i >= 0 && result.length < k; i--) this._pushNodes(i, k, result)
+    // Row i holds nodes that match this.id before bit i and differ from it at bit i.
+    // If id also differs from this.id at bit i, those nodes are closer to id than every
+    // node in a later row; if id matches this.id there, they are farther. So we take
+    // the rows where id differs going up from d (all closer to id than we are), then
+    // the rows where id matches going down from the top (all farther).
 
-    // if we don't have enough close nodes, populate from other rows, re the paper
-    for (let i = d + 1; i < this.rows.length && result.length < k; i++) this._pushNodes(i, k, result)
+    // rows where id differs from this.id, closest first
+    for (let i = d; i < this.rows.length && result.length < k; i++) {
+      const row = this.rows[i]
+      if (row && bitDiffers(id, this.id, i)) this._pushNodes(row, id, k, result)
+    }
+
+    // rows where id matches this.id, closest first
+    for (let i = this.rows.length - 1; i >= 0 && result.length < k; i--) {
+      const row = this.rows[i]
+      if (row && !bitDiffers(id, this.id, i)) this._pushNodes(row, id, k, result)
+    }
 
     return result
   }
 
-  _pushNodes (i, k, result) {
-    const row = this.rows[i]
-    if (!row) return
+  _pushNodes (row, id, k, result) {
+    const missing = k - result.length
+    let nodes = row.nodes
 
-    const missing = Math.min(k - result.length, row.nodes.length)
-    for (let j = 0; j < missing; j++) result.push(row.nodes[j])
+    // rows are sorted by id, not by distance to id, so pick the closest ones when only some fit
+    if (missing < nodes.length) {
+      nodes = nodes.slice().sort((a, b) => compareDistance(a.id, b.id, id, row.byteOffset))
+    }
+
+    for (let j = 0; j < Math.min(missing, nodes.length); j++) result.push(nodes[j])
   }
 
   toArray () {
@@ -199,4 +215,20 @@ class Row extends EventEmitter {
     }
     return 0
   }
+}
+
+function bitDiffers (a, b, i) {
+  const j = i >> 3
+  return ((a[j] ^ b[j]) & (0x80 >> (i & 7))) !== 0
+}
+
+// nodes in the same row share their first `offset` bytes, so those bytes can't decide the order
+function compareDistance (a, b, target, offset) {
+  for (let i = offset; i < a.length; i++) {
+    const ai = a[i] ^ target[i]
+    const bi = b[i] ^ target[i]
+    if (ai === bi) continue
+    return ai < bi ? -1 : 1
+  }
+  return 0
 }

@@ -23,4 +23,4 @@ for (let i = 0; i < 40; i++) {
   })
 }
 
-console.log('The 20 closest nodes to', table.id, 'are:', table.closest(20))
+console.log('The 20 closest nodes to', table.id, 'are:', table.closest(table.id, 20))
