@@ -18,7 +18,7 @@ const RoutingTable = require('kademlia-routing-table')
 const { randomBytes } = require('crypto')
 
 // Create a new table that stores nodes "close" to the passed in id.
-// The id should be uniformily distributed, ie a hash, random bytes etc.
+// The id should be uniformly distributed, ie a hash, random bytes etc.
 const table = new RoutingTable(randomBytes(32))
 
 // Listen before adding nodes: 'row' is only emitted when a row is created,
@@ -51,7 +51,7 @@ const closest = table.closest(randomBytes(32), 20)
 
 Create a new routing table.
 
-`id` should be a Buffer that is uniformily distributed. `options` include:
+`id` should be a Buffer that is uniformly distributed. `options` include:
 
 ``` js
 {
@@ -112,7 +112,7 @@ about accessing rows directly outside the row event.
 
 ## Row API
 
-For the row passed in the the `onfullrow` function the following API exists.
+For the row passed in the `onfullrow` function the following API exists.
 
 #### `row.index`
 
