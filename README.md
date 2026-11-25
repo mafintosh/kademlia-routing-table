@@ -130,10 +130,11 @@ Property set to null initially you can use if you want to store optional data on
 Same as `table.add` but for a specific row. Only use this to add the `newNode`
 passed in `onfullrow` function.
 
-#### `bool = row.remove(node)`
+#### `bool = row.remove(id)`
 
-Same as `table.remove` but for a specific row. Only use this to remove the
-"worst" node from the row when wanting to add the newNode.
+Same as `table.remove` but for a specific row. Takes the node's id, not the
+node, e.g. `row.remove(worst.id)`. Only use this to remove the "worst" node
+from the row when wanting to add the newNode.
 
 #### `row.on('add', node)`
 
