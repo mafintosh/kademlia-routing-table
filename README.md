@@ -21,12 +21,8 @@ const { randomBytes } = require('crypto')
 // The id should be uniformily distributed, ie a hash, random bytes etc.
 const table = new RoutingTable(randomBytes(32))
 
-// Add a node to the routing table
-table.add({
-  id: randomBytes(32), // this field is required
-  // populate with any other data you want to store
-})
-
+// Listen before adding nodes: 'row' is only emitted when a row is created,
+// so rows created before this listener is attached never get a 'full' handler.
 table.on('row', function (row) {
   // A new row has been added to the routing table
   // This row represents row.index similar bits to the table.id
@@ -37,6 +33,12 @@ table.on('row', function (row) {
     // some application specific metric then we should remove
     // the worst node from the row and re-add the node.
   })
+})
+
+// Add a node to the routing table
+table.add({
+  id: randomBytes(32), // this field is required
+  // populate with any other data you want to store
 })
 
 // Get the 20 nodes "closest" to a passed in id
