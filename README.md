@@ -6,7 +6,7 @@ XOR distance based routing table used for P2P networks such as a Kademlia DHT.
 npm install kademlia-routing-table
 ```
 
-Similar to k-buckets, but implemented using the simplifications described in https://github.com/ethereum/wiki/wiki/Kademlia-Peer-Selection
+Similar to k-buckets, but implemented using the simplifications described in https://web.archive.org/web/20181102041849/https://github.com/ethereum/wiki/wiki/Kademlia-Peer-Selection
 
 To understand the concept behind peer routing, DHTs, and the terms used here,
 I recommend reading the [Kademlia DHT paper](https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf) as well.
