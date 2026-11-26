@@ -6,7 +6,7 @@ XOR distance based routing table used for P2P networks such as a Kademlia DHT.
 npm install kademlia-routing-table
 ```
 
-Similar to k-buckets, but implemented using the simplifications described in https://github.com/ethereum/wiki/wiki/Kademlia-Peer-Selection
+Similar to k-buckets, but implemented using the simplifications described in https://web.archive.org/web/20181102041849/https://github.com/ethereum/wiki/wiki/Kademlia-Peer-Selection
 
 To understand the concept behind peer routing, DHTs, and the terms used here,
 I recommend reading the [Kademlia DHT paper](https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf) as well.
@@ -18,15 +18,11 @@ const RoutingTable = require('kademlia-routing-table')
 const { randomBytes } = require('crypto')
 
 // Create a new table that stores nodes "close" to the passed in id.
-// The id should be uniformily distributed, ie a hash, random bytes etc.
+// The id should be uniformly distributed, ie a hash, random bytes etc.
 const table = new RoutingTable(randomBytes(32))
 
-// Add a node to the routing table
-table.add({
-  id: randomBytes(32), // this field is required
-  // populate with any other data you want to store
-})
-
+// Listen before adding nodes: 'row' is only emitted when a row is created,
+// so rows created before this listener is attached never get a 'full' handler.
 table.on('row', function (row) {
   // A new row has been added to the routing table
   // This row represents row.index similar bits to the table.id
@@ -39,6 +35,12 @@ table.on('row', function (row) {
   })
 })
 
+// Add a node to the routing table
+table.add({
+  id: randomBytes(32), // this field is required
+  // populate with any other data you want to store
+})
+
 // Get the 20 nodes "closest" to a passed in id
 const closest = table.closest(randomBytes(32), 20)
 ```
@@ -49,7 +51,7 @@ const closest = table.closest(randomBytes(32), 20)
 
 Create a new routing table.
 
-`id` should be a Buffer that is uniformily distributed. `options` include:
+`id` should be a Buffer that is uniformly distributed. `options` include:
 
 ``` js
 {
@@ -64,7 +66,7 @@ When inserting a node the XOR distance between the node and the table.id is
 calculated and used to figure which table row this node should be inserted into.
 
 Returns `true` if the node could be added to the corresponding row or `false` if not.
-If `false` is returned the onfullrow function is invoked for the corresponding row and node.
+If `false` is returned the corresponding row emits `'full'` with the node.
 
 #### `node = table.get(id)`
 
@@ -110,7 +112,7 @@ about accessing rows directly outside the row event.
 
 ## Row API
 
-For the row passed in the the `onfullrow` function the following API exists.
+For the row passed in the `'row'` event the following API exists.
 
 #### `row.index`
 
@@ -127,13 +129,14 @@ Property set to null initially you can use if you want to store optional data on
 
 #### `bool = row.add(node)`
 
-Same as `table.add` but for a specific row. Only use this to add the `newNode`
-passed in `onfullrow` function.
+Same as `table.add` but for a specific row. Only use this to add the node
+passed to the `'full'` event.
 
-#### `bool = row.remove(node)`
+#### `bool = row.remove(id)`
 
-Same as `table.remove` but for a specific row. Only use this to remove the
-"worst" node from the row when wanting to add the newNode.
+Same as `table.remove` but for a specific row. Takes the node's id, not the
+node, e.g. `row.remove(worst.id)`. Only use this to remove the "worst" node
+from the row when wanting to add the node passed to the `'full'` event.
 
 #### `row.on('add', node)`
 
