@@ -66,7 +66,7 @@ When inserting a node the XOR distance between the node and the table.id is
 calculated and used to figure which table row this node should be inserted into.
 
 Returns `true` if the node could be added to the corresponding row or `false` if not.
-If `false` is returned the onfullrow function is invoked for the corresponding row and node.
+If `false` is returned the corresponding row emits `'full'` with the node.
 
 #### `node = table.get(id)`
 
@@ -112,7 +112,7 @@ about accessing rows directly outside the row event.
 
 ## Row API
 
-For the row passed in the `onfullrow` function the following API exists.
+For the row passed in the `'row'` event the following API exists.
 
 #### `row.index`
 
@@ -129,14 +129,14 @@ Property set to null initially you can use if you want to store optional data on
 
 #### `bool = row.add(node)`
 
-Same as `table.add` but for a specific row. Only use this to add the `newNode`
-passed in `onfullrow` function.
+Same as `table.add` but for a specific row. Only use this to add the node
+passed to the `'full'` event.
 
 #### `bool = row.remove(id)`
 
 Same as `table.remove` but for a specific row. Takes the node's id, not the
 node, e.g. `row.remove(worst.id)`. Only use this to remove the "worst" node
-from the row when wanting to add the newNode.
+from the row when wanting to add the node passed to the `'full'` event.
 
 #### `row.on('add', node)`
 
